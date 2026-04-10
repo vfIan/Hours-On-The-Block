@@ -14,12 +14,10 @@ public class PlayerController2D : MonoBehaviour
     public LayerMask groundLayer;
 
     private float moveInput = 0f;
-    private Vector3 originalScale;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        originalScale = transform.localScale;
     }
 
     void Update()
@@ -39,16 +37,6 @@ public class PlayerController2D : MonoBehaviour
             moveInput = 1f;
 
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
-
-        // Girar personaje sin deformarlo
-        if (moveInput != 0)
-        {
-            transform.localScale = new Vector3(
-                Mathf.Sign(moveInput) * Mathf.Abs(originalScale.x),
-                originalScale.y,
-                originalScale.z
-            );
-        }
     }
 
     void Jump()

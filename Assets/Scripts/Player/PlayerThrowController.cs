@@ -9,6 +9,12 @@ public class PlayerThrowController : MonoBehaviour
     public LayerMask throwableLayer;
     public Transform holdPoint;
 
+    [Header("Aiming")]
+    public Transform bodyVisual;   // cuerpo_0
+    public Transform armPivot;     // brazoPivot
+    public float minArmAngle = -80f;
+    public float maxArmAngle = 80f;
+
     [Header("Throw")]
     public float maxChargeTime = 1.5f;
     public float minThrowForce = 3f;
@@ -19,9 +25,20 @@ public class PlayerThrowController : MonoBehaviour
     private bool isCharging = false;
     private float currentChargeTime = 0f;
 
+    private Vector3 bodyOriginalScale;
+    private Vector3 armOriginalScale;
+
     void Start()
     {
         cam = Camera.main;
+
+        if (bodyVisual == null)
+            bodyVisual = transform;
+
+        if (armPivot != null)
+            armOriginalScale = armPivot.localScale;
+
+        bodyOriginalScale = bodyVisual.localScale;
     }
 
     void Update()
@@ -35,7 +52,6 @@ public class PlayerThrowController : MonoBehaviour
     {
         if (Keyboard.current.eKey.wasPressedThisFrame)
         {
-            // Si ya lleva algo, lo suelta
             if (heldObject != null)
             {
                 CancelCharge();
@@ -44,7 +60,6 @@ public class PlayerThrowController : MonoBehaviour
                 return;
             }
 
-            // Si no lleva nada, intenta coger el objeto más cercano
             Collider2D[] hits = Physics2D.OverlapCircleAll(
                 pickupCheck.position,
                 pickupRadius,
@@ -80,25 +95,42 @@ public class PlayerThrowController : MonoBehaviour
 
     void HandleAiming()
     {
-        if (heldObject == null) return;
+        if (cam == null || armPivot == null || bodyVisual == null) return;
 
         Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
         Vector3 mouseWorldPos = cam.ScreenToWorldPoint(mouseScreenPos);
         mouseWorldPos.z = 0f;
 
-        // Girar el personaje según el ratón
-        if (mouseWorldPos.x < transform.position.x)
+        // ¿Ratón a la izquierda o derecha del personaje?
+        bool facingLeft = mouseWorldPos.x < transform.position.x;
+
+        // 1) El cuerpo se pone mirando a izquierda o derecha
+        Vector3 bodyScale = bodyOriginalScale;
+        bodyScale.x = facingLeft ? -Mathf.Abs(bodyOriginalScale.x) : Mathf.Abs(bodyOriginalScale.x);
+        bodyVisual.localScale = bodyScale;
+
+        // 2) Dirección del brazo al ratón en coordenadas LOCALES del Player
+        Vector3 localMouse = transform.InverseTransformPoint(mouseWorldPos);
+        Vector3 localPivot = transform.InverseTransformPoint(armPivot.position);
+        Vector2 aimDir = localMouse - localPivot;
+
+        float angle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
+
+        // 3) Si está mirando a la izquierda, remapeamos el ángulo
+        // para que el brazo siga al ratón pero sin darse la vuelta
+        if (facingLeft)
         {
-            Vector3 scale = transform.localScale;
-            scale.x = -Mathf.Abs(scale.x);
-            transform.localScale = scale;
+            if (angle > 0f)
+                angle = 180f - angle;
+            else
+                angle = -180f - angle;
         }
-        else
-        {
-            Vector3 scale = transform.localScale;
-            scale.x = Mathf.Abs(scale.x);
-            transform.localScale = scale;
-        }
+
+        // 4) Limitamos el rango del brazo
+        angle = Mathf.Clamp(angle, minArmAngle, maxArmAngle);
+
+        armPivot.localRotation = Quaternion.Euler(0f, 0f, angle);
+        armPivot.localScale = armOriginalScale;
     }
 
     void HandleThrowCharge()

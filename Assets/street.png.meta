@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 47325461198630548ab664f7d6478a54
+guid: 058dd443a287f684392d57d45cc3d904
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 275787231904491891
-    second: brazo_0
+      213: 4777861783574383369
+    second: street_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: brazo_0
+      name: street_0
       rect:
         serializedVersion: 2
-        x: 284
-        y: 427
-        width: 635
-        height: 417
-      alignment: 9
-      pivot: {x: 0.5166549, y: 0.51975137}
+        x: 25
+        y: 3
+        width: 842
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3796147b60bc3d300800000000000000
-      internalID: 275787231904491891
+      spriteID: 90b8ddb5aff5e4240800000000000000
+      internalID: 4777861783574383369
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 9d501ebcac1fa53429cb2cdf3ca05fda
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      brazo_0: 275787231904491891
+      street_0: 4777861783574383369
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
