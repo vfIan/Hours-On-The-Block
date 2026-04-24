@@ -1,16 +1,10 @@
 fileFormatVersion: 2
-guid: 10766a16f89c82b45ad104e8a72c0ce4
+guid: 37d232841399561428ee7be7073df8a9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5694860360191418989
-    second: npc3 1_0
-  - first:
-      213: -6893552705603908405
-    second: npc3 1_1
-  - first:
-      213: 1550958203240390846
-    second: npc3 1_2
+      213: 9046244085665936813
+    second: vidrio1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -106,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: npc3 1_0
+      name: vidrio1_0
       rect:
         serializedVersion: 2
-        x: 87
-        y: 136
-        width: 554
-        height: 625
+        x: 461
+        y: 498
+        width: 117
+        height: 78
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -121,52 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 39d5651dcaac7f0b0800000000000000
-      internalID: -5694860360191418989
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: npc3 1_1
-      rect:
-        serializedVersion: 2
-        x: 535
-        y: 132
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: bcccb0e765e2550a0800000000000000
-      internalID: -6893552705603908405
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: npc3 1_2
-      rect:
-        serializedVersion: 2
-        x: 550
-        y: 132
-        width: 6
-        height: 6
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: eb02f9db44c168510800000000000000
-      internalID: 1550958203240390846
+      spriteID: da5b89d1117ba8d70800000000000000
+      internalID: 9046244085665936813
       vertices: []
       indices: 
       edges: []
@@ -185,9 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      npc3 1_0: -5694860360191418989
-      npc3 1_1: -6893552705603908405
-      npc3 1_2: 1550958203240390846
+      vidrio1_0: 9046244085665936813
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
