@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController2D : MonoBehaviour
 {
@@ -46,9 +47,11 @@ public class PlayerController2D : MonoBehaviour
     {
         moveInput = 0f;
 
-        if (Input.GetKey(KeyCode.A))
+        if (Keyboard.current == null) return;
+
+        if (Keyboard.current.aKey.isPressed)
             moveInput = -1f;
-        else if (Input.GetKey(KeyCode.D))
+        else if (Keyboard.current.dKey.isPressed)
             moveInput = 1f;
     }
 
@@ -74,7 +77,9 @@ public class PlayerController2D : MonoBehaviour
 
     void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Keyboard.current == null) return;
+
+        if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
         }

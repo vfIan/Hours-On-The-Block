@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerThrowController : MonoBehaviour
 {
@@ -59,7 +60,9 @@ public class PlayerThrowController : MonoBehaviour
 
     void HandlePickupOrDrop()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Keyboard.current == null) return;
+
+        if (Keyboard.current.eKey.wasPressedThisFrame)
         {
             if (heldObject != null)
             {
@@ -72,6 +75,8 @@ public class PlayerThrowController : MonoBehaviour
                 heldObject = null;
                 return;
             }
+
+            if (pickupCheck == null) return;
 
             Collider2D[] hits = Physics2D.OverlapCircleAll(
                 pickupCheck.position,
@@ -109,15 +114,25 @@ public class PlayerThrowController : MonoBehaviour
     void HandleAiming()
     {
         if (cam == null || armPivot == null || bodyVisual == null) return;
+        if (Mouse.current == null) return;
 
-        Vector3 mouseWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
-        mouseWorldPos.z = 0f;
+        Vector3 mouseWorldPos = GetMouseWorldPosition();
 
         bool facingLeft = mouseWorldPos.x < transform.position.x;
 
         FlipBody(facingLeft);
         AimArm(mouseWorldPos);
         UpdatePowerBarPosition(facingLeft);
+    }
+
+    Vector3 GetMouseWorldPosition()
+    {
+        Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
+
+        Vector3 mouseWorldPos = cam.ScreenToWorldPoint(mouseScreenPos);
+        mouseWorldPos.z = 0f;
+
+        return mouseWorldPos;
     }
 
     void FlipBody(bool facingLeft)
@@ -147,18 +162,7 @@ public class PlayerThrowController : MonoBehaviour
     {
         if (powerBar == null) return;
 
-        float xOffset;
-
-        if (facingLeft)
-        {
-            // Si apunta a la izquierda, la barra aparece a la derecha.
-            xOffset = powerBarSideOffsetX;
-        }
-        else
-        {
-            // Si apunta a la derecha, la barra aparece a la izquierda.
-            xOffset = -powerBarSideOffsetX;
-        }
+        float xOffset = facingLeft ? powerBarSideOffsetX : -powerBarSideOffsetX;
 
         Vector3 worldPos = transform.position + new Vector3(xOffset, powerBarOffsetY, 0f);
         powerBar.transform.position = worldPos;
@@ -176,6 +180,8 @@ public class PlayerThrowController : MonoBehaviour
 
     void HandleThrowCharge()
     {
+        if (Mouse.current == null) return;
+
         if (heldObject == null)
         {
             CancelCharge();
@@ -186,7 +192,7 @@ public class PlayerThrowController : MonoBehaviour
             return;
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             isCharging = true;
             currentChargeTime = 0f;
@@ -198,7 +204,7 @@ public class PlayerThrowController : MonoBehaviour
             }
         }
 
-        if (isCharging && Input.GetMouseButton(0))
+        if (isCharging && Mouse.current.leftButton.isPressed)
         {
             currentChargeTime += Time.deltaTime;
             currentChargeTime = Mathf.Clamp(currentChargeTime, 0f, maxChargeTime);
@@ -209,10 +215,9 @@ public class PlayerThrowController : MonoBehaviour
                 powerBar.SetPower(chargePercent);
         }
 
-        if (isCharging && Input.GetMouseButtonUp(0))
+        if (isCharging && Mouse.current.leftButton.wasReleasedThisFrame)
         {
-            Vector3 mouseWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
-            mouseWorldPos.z = 0f;
+            Vector3 mouseWorldPos = GetMouseWorldPosition();
 
             Vector2 direction = (mouseWorldPos - holdPoint.position).normalized;
 
