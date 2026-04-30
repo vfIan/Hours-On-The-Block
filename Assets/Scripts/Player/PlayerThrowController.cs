@@ -9,8 +9,8 @@ public class PlayerThrowController : MonoBehaviour
     public Transform holdPoint;
 
     [Header("Aiming")]
-    public Transform bodyVisual;
-    public Transform armPivot;
+    public Transform bodyVisual;      // cuerpo_0
+    public Transform armPivot;        // brazoPivot
     public float minArmAngle = -80f;
     public float maxArmAngle = 80f;
 
@@ -19,13 +19,20 @@ public class PlayerThrowController : MonoBehaviour
     public float minThrowForce = 3f;
     public float maxThrowForce = 15f;
 
+    [Header("Power Bar")]
+    public WorldPowerBar powerBar;    // PowerBar
+    public float powerBarSideOffsetX = 1.2f;
+    public float powerBarOffsetY = 1.5f;
+
     private ThrowableObject heldObject;
     private Camera cam;
+
     private bool isCharging = false;
     private float currentChargeTime = 0f;
 
     private Vector3 bodyOriginalScale;
     private Vector3 armOriginalScale;
+    private Vector3 powerBarOriginalScale;
 
     void Start()
     {
@@ -34,10 +41,13 @@ public class PlayerThrowController : MonoBehaviour
         if (bodyVisual == null)
             bodyVisual = transform;
 
+        bodyOriginalScale = bodyVisual.localScale;
+
         if (armPivot != null)
             armOriginalScale = armPivot.localScale;
 
-        bodyOriginalScale = bodyVisual.localScale;
+        if (powerBar != null)
+            powerBarOriginalScale = powerBar.transform.localScale;
     }
 
     void Update()
@@ -54,6 +64,10 @@ public class PlayerThrowController : MonoBehaviour
             if (heldObject != null)
             {
                 CancelCharge();
+
+                if (powerBar != null)
+                    powerBar.Hide();
+
                 heldObject.Drop();
                 heldObject = null;
                 return;
@@ -82,7 +96,7 @@ public class PlayerThrowController : MonoBehaviour
             if (closest != null)
             {
                 ThrowableObject obj = closest.GetComponentInParent<ThrowableObject>();
-                
+
                 if (obj != null)
                 {
                     heldObject = obj;
@@ -94,52 +108,105 @@ public class PlayerThrowController : MonoBehaviour
 
     void HandleAiming()
     {
-        if (cam == null || armPivot == null) return;
+        if (cam == null || armPivot == null || bodyVisual == null) return;
 
         Vector3 mouseWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = 0f;
 
         bool facingLeft = mouseWorldPos.x < transform.position.x;
 
-        Vector3 bodyScale = bodyOriginalScale;
-        bodyScale.x = facingLeft ? -Mathf.Abs(bodyOriginalScale.x) : Mathf.Abs(bodyOriginalScale.x);
-        bodyVisual.localScale = bodyScale;
+        FlipBody(facingLeft);
+        AimArm(mouseWorldPos);
+        UpdatePowerBarPosition(facingLeft);
+    }
 
-        Vector3 localMouse = transform.InverseTransformPoint(mouseWorldPos);
-        Vector3 localPivot = transform.InverseTransformPoint(armPivot.position);
+    void FlipBody(bool facingLeft)
+    {
+        Vector3 scale = bodyOriginalScale;
+        scale.x = facingLeft ? -Mathf.Abs(bodyOriginalScale.x) : Mathf.Abs(bodyOriginalScale.x);
+        bodyVisual.localScale = scale;
+    }
 
-        Vector2 localAimDir = localMouse - localPivot;
+    void AimArm(Vector3 mouseWorldPos)
+    {
+        Transform parent = armPivot.parent;
 
-        float angle = Mathf.Atan2(localAimDir.y, localAimDir.x) * Mathf.Rad2Deg;
+        if (parent == null) return;
 
-        if (facingLeft)
-        {
-            if (angle > 0f)
-                angle = 180f - angle;
-            else
-                angle = -180f - angle;
-        }
+        Vector3 localMouse = parent.InverseTransformPoint(mouseWorldPos);
+        Vector2 localDir = localMouse - armPivot.localPosition;
 
+        float angle = Mathf.Atan2(localDir.y, localDir.x) * Mathf.Rad2Deg;
         angle = Mathf.Clamp(angle, minArmAngle, maxArmAngle);
 
         armPivot.localRotation = Quaternion.Euler(0f, 0f, angle);
         armPivot.localScale = armOriginalScale;
     }
 
+    void UpdatePowerBarPosition(bool facingLeft)
+    {
+        if (powerBar == null) return;
+
+        float xOffset;
+
+        if (facingLeft)
+        {
+            // Si apunta a la izquierda, la barra aparece a la derecha.
+            xOffset = powerBarSideOffsetX;
+        }
+        else
+        {
+            // Si apunta a la derecha, la barra aparece a la izquierda.
+            xOffset = -powerBarSideOffsetX;
+        }
+
+        Vector3 worldPos = transform.position + new Vector3(xOffset, powerBarOffsetY, 0f);
+        powerBar.transform.position = worldPos;
+
+        // Como PowerBar está dentro de cuerpo_0, compensamos el flip para que no se vea espejada.
+        Vector3 scale = powerBarOriginalScale;
+
+        if (facingLeft)
+            scale.x = -Mathf.Abs(powerBarOriginalScale.x);
+        else
+            scale.x = Mathf.Abs(powerBarOriginalScale.x);
+
+        powerBar.transform.localScale = scale;
+    }
+
     void HandleThrowCharge()
     {
-        if (heldObject == null) return;
+        if (heldObject == null)
+        {
+            CancelCharge();
+
+            if (powerBar != null)
+                powerBar.Hide();
+
+            return;
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
             isCharging = true;
             currentChargeTime = 0f;
+
+            if (powerBar != null)
+            {
+                powerBar.Show();
+                powerBar.SetPower(0f);
+            }
         }
 
         if (isCharging && Input.GetMouseButton(0))
         {
             currentChargeTime += Time.deltaTime;
             currentChargeTime = Mathf.Clamp(currentChargeTime, 0f, maxChargeTime);
+
+            float chargePercent = currentChargeTime / maxChargeTime;
+
+            if (powerBar != null)
+                powerBar.SetPower(chargePercent);
         }
 
         if (isCharging && Input.GetMouseButtonUp(0))
@@ -156,6 +223,9 @@ public class PlayerThrowController : MonoBehaviour
             heldObject = null;
 
             CancelCharge();
+
+            if (powerBar != null)
+                powerBar.Hide();
         }
     }
 
@@ -163,6 +233,9 @@ public class PlayerThrowController : MonoBehaviour
     {
         isCharging = false;
         currentChargeTime = 0f;
+
+        if (powerBar != null)
+            powerBar.SetPower(0f);
     }
 
     void OnDrawGizmosSelected()
