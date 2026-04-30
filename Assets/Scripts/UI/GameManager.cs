@@ -23,6 +23,12 @@ public class GameManager : MonoBehaviour
 
     void UpdateUI()
     {
+        if (hoursText == null)
+        {
+            Debug.LogWarning("GameManager: falta asignar el texto de horas.");
+            return;
+        }
+
         hoursText.text = hours.ToString("0.0") + " horas";
     }
 }

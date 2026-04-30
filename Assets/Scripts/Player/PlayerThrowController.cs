@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerThrowController : MonoBehaviour
 {
@@ -10,8 +9,8 @@ public class PlayerThrowController : MonoBehaviour
     public Transform holdPoint;
 
     [Header("Aiming")]
-    public Transform bodyVisual;   // cuerpo_0
-    public Transform armPivot;     // brazoPivot
+    public Transform bodyVisual;
+    public Transform armPivot;
     public float minArmAngle = -80f;
     public float maxArmAngle = 80f;
 
@@ -50,7 +49,7 @@ public class PlayerThrowController : MonoBehaviour
 
     void HandlePickupOrDrop()
     {
-        if (Keyboard.current.eKey.wasPressedThisFrame)
+        if (Input.GetKeyDown(KeyCode.E))
         {
             if (heldObject != null)
             {
@@ -82,8 +81,8 @@ public class PlayerThrowController : MonoBehaviour
 
             if (closest != null)
             {
-                ThrowableObject obj = closest.GetComponent<ThrowableObject>();
-
+                ThrowableObject obj = closest.GetComponentInParent<ThrowableObject>();
+                
                 if (obj != null)
                 {
                     heldObject = obj;
@@ -95,29 +94,24 @@ public class PlayerThrowController : MonoBehaviour
 
     void HandleAiming()
     {
-        if (cam == null || armPivot == null || bodyVisual == null) return;
+        if (cam == null || armPivot == null) return;
 
-        Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
-        Vector3 mouseWorldPos = cam.ScreenToWorldPoint(mouseScreenPos);
+        Vector3 mouseWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = 0f;
 
-        // ¿Ratón a la izquierda o derecha del personaje?
         bool facingLeft = mouseWorldPos.x < transform.position.x;
 
-        // 1) El cuerpo se pone mirando a izquierda o derecha
         Vector3 bodyScale = bodyOriginalScale;
         bodyScale.x = facingLeft ? -Mathf.Abs(bodyOriginalScale.x) : Mathf.Abs(bodyOriginalScale.x);
         bodyVisual.localScale = bodyScale;
 
-        // 2) Dirección del brazo al ratón en coordenadas LOCALES del Player
         Vector3 localMouse = transform.InverseTransformPoint(mouseWorldPos);
         Vector3 localPivot = transform.InverseTransformPoint(armPivot.position);
-        Vector2 aimDir = localMouse - localPivot;
 
-        float angle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
+        Vector2 localAimDir = localMouse - localPivot;
 
-        // 3) Si está mirando a la izquierda, remapeamos el ángulo
-        // para que el brazo siga al ratón pero sin darse la vuelta
+        float angle = Mathf.Atan2(localAimDir.y, localAimDir.x) * Mathf.Rad2Deg;
+
         if (facingLeft)
         {
             if (angle > 0f)
@@ -126,7 +120,6 @@ public class PlayerThrowController : MonoBehaviour
                 angle = -180f - angle;
         }
 
-        // 4) Limitamos el rango del brazo
         angle = Mathf.Clamp(angle, minArmAngle, maxArmAngle);
 
         armPivot.localRotation = Quaternion.Euler(0f, 0f, angle);
@@ -137,22 +130,21 @@ public class PlayerThrowController : MonoBehaviour
     {
         if (heldObject == null) return;
 
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (Input.GetMouseButtonDown(0))
         {
             isCharging = true;
             currentChargeTime = 0f;
         }
 
-        if (isCharging && Mouse.current.leftButton.isPressed)
+        if (isCharging && Input.GetMouseButton(0))
         {
             currentChargeTime += Time.deltaTime;
             currentChargeTime = Mathf.Clamp(currentChargeTime, 0f, maxChargeTime);
         }
 
-        if (isCharging && Mouse.current.leftButton.wasReleasedThisFrame)
+        if (isCharging && Input.GetMouseButtonUp(0))
         {
-            Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
-            Vector3 mouseWorldPos = cam.ScreenToWorldPoint(mouseScreenPos);
+            Vector3 mouseWorldPos = cam.ScreenToWorldPoint(Input.mousePosition);
             mouseWorldPos.z = 0f;
 
             Vector2 direction = (mouseWorldPos - holdPoint.position).normalized;

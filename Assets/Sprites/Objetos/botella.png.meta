@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4ac61c6186872d244bf72660c9be3f79
+guid: e8ea028efdb1c1948ab04b33e33c6855
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6074236340301439999
-    second: edificio0_0
+      213: 6611063975212234208
+    second: botella_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: edificio0_0
+      name: botella_0
       rect:
         serializedVersion: 2
-        x: 142
-        y: 119
-        width: 504
-        height: 514
+        x: 328
+        y: 162
+        width: 144
+        height: 520
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 10c509e2b3af3bba0800000000000000
-      internalID: -6074236340301439999
+      spriteID: 0e538e598a73fbb50800000000000000
+      internalID: 6611063975212234208
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      edificio0_0: -6074236340301439999
+      botella_0: 6611063975212234208
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

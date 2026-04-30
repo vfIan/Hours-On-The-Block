@@ -15,6 +15,8 @@ public class ThrowableObject : MonoBehaviour
 
     public void PickUp(Transform holdPoint)
     {
+        if (rb == null || holdPoint == null) return;
+
         isHeld = true;
 
         rb.linearVelocity = Vector2.zero;
@@ -26,10 +28,13 @@ public class ThrowableObject : MonoBehaviour
 
         transform.SetParent(holdPoint);
         transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
     }
 
     public void Drop()
     {
+        if (rb == null) return;
+
         isHeld = false;
 
         transform.SetParent(null);
@@ -41,6 +46,8 @@ public class ThrowableObject : MonoBehaviour
 
     public void Throw(Vector2 force)
     {
+        if (rb == null) return;
+
         isHeld = false;
 
         transform.SetParent(null);

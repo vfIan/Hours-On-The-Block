@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerController2D : MonoBehaviour
 {
@@ -13,8 +12,8 @@ public class PlayerController2D : MonoBehaviour
     public LayerMask groundLayer;
 
     [Header("Visual")]
-    public Transform bodyVisual;   // arrastra cuerpo_0
-    public Animator animator;      // arrastra el Animator de cuerpo_0
+    public Transform bodyVisual;
+    public Animator animator;
 
     private Rigidbody2D rb;
     private bool isGrounded;
@@ -47,9 +46,9 @@ public class PlayerController2D : MonoBehaviour
     {
         moveInput = 0f;
 
-        if (Keyboard.current.aKey.isPressed)
+        if (Input.GetKey(KeyCode.A))
             moveInput = -1f;
-        else if (Keyboard.current.dKey.isPressed)
+        else if (Input.GetKey(KeyCode.D))
             moveInput = 1f;
     }
 
@@ -60,7 +59,11 @@ public class PlayerController2D : MonoBehaviour
 
     void CheckGround()
     {
-        if (groundCheck == null) return;
+        if (groundCheck == null)
+        {
+            isGrounded = false;
+            return;
+        }
 
         isGrounded = Physics2D.OverlapCircle(
             groundCheck.position,
@@ -69,16 +72,13 @@ public class PlayerController2D : MonoBehaviour
         );
     }
 
-   void Jump()
-{
-    if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
+    void Jump()
     {
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-
-        if (animator != null)
-            animator.SetTrigger("jumpTrigger");
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        }
     }
-}
 
     void FlipCharacter()
     {
@@ -102,7 +102,7 @@ public class PlayerController2D : MonoBehaviour
     {
         if (animator == null) return;
 
-        bool isRunning = Mathf.Abs(rb.linearVelocity.x) > 0.01f;
+        bool isRunning = moveInput != 0f && isGrounded;
 
         animator.SetBool("isRunning", isRunning);
         animator.SetBool("isGrounded", isGrounded);

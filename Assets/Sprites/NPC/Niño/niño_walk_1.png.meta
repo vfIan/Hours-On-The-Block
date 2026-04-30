@@ -1,19 +1,10 @@
 fileFormatVersion: 2
-guid: 8081632cee6a8134694a13d4167b0454
+guid: f4ea925eefb12bc47bf814dd391bdd0a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4270418484268803622
-    second: edificio1_0
-  - first:
-      213: -7815552378099469751
-    second: edificio1_1
-  - first:
-      213: -1364320199336129460
-    second: edificio1_2
-  - first:
-      213: 9012106587623113400
-    second: edificio1_3
+      213: -5500064568287985632
+    second: "ni\xF1o_walk_1_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: edificio1_0
+      name: "ni\xF1o_walk_1_0"
       rect:
         serializedVersion: 2
-        x: 187
-        y: 627
-        width: 89
-        height: 129
+        x: 285
+        y: 157
+        width: 289
+        height: 600
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,74 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ad955e2a30d6cb4c0800000000000000
-      internalID: -4270418484268803622
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: edificio1_1
-      rect:
-        serializedVersion: 2
-        x: 301
-        y: 629
-        width: 67
-        height: 37
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 942fbeb4584998390800000000000000
-      internalID: -7815552378099469751
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: edificio1_2
-      rect:
-        serializedVersion: 2
-        x: 417
-        y: 627
-        width: 37
-        height: 39
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c4c0ea6d106f01de0800000000000000
-      internalID: -1364320199336129460
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: edificio1_3
-      rect:
-        serializedVersion: 2
-        x: 461
-        y: 628
-        width: 173
-        height: 92
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 8b2cb39713f611d70800000000000000
-      internalID: 9012106587623113400
+      spriteID: 0208b7d6a68dba3b0800000000000000
+      internalID: -5500064568287985632
       vertices: []
       indices: 
       edges: []
@@ -210,10 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      edificio1_0: -4270418484268803622
-      edificio1_1: -7815552378099469751
-      edificio1_2: -1364320199336129460
-      edificio1_3: 9012106587623113400
+      "ni\xF1o_walk_1_0": -5500064568287985632
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

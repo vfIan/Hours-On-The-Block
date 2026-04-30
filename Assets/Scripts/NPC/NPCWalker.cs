@@ -19,7 +19,13 @@ public class NPCWalker : MonoBehaviour
 
     void Start()
     {
+        if (maxDropTime < minDropTime)
+            maxDropTime = minDropTime;
+
         dropTime = Random.Range(minDropTime, maxDropTime);
+
+        // Normalizar dirección para que no vaya más rápido si el vector es raro
+        direction = direction.normalized;
 
         // Girar visualmente según dirección
         Vector3 scale = transform.localScale;
@@ -54,7 +60,17 @@ public class NPCWalker : MonoBehaviour
 
     void DropTrash()
     {
-        if (assignedTrashPrefab == null || dropPoint == null) return;
+        if (assignedTrashPrefab == null)
+        {
+            Debug.LogWarning("NPCWalker: No hay basura asignada.");
+            return;
+        }
+
+        if (dropPoint == null)
+        {
+            Debug.LogWarning("NPCWalker: No hay DropPoint asignado.");
+            return;
+        }
 
         Instantiate(assignedTrashPrefab, dropPoint.position, Quaternion.identity);
     }
