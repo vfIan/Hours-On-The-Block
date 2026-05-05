@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: add3702647ebd6549a96a76da5aac3e4
+guid: 3d99a2646caf0794b9dbf05fe2934530
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5773259292791724518
-    second: brazoi_0
+      213: 1292748739143149128
+    second: bg_menu_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: brazoi_0
+      name: bg_menu_0
       rect:
         serializedVersion: 2
-        x: 250
-        y: 534
-        width: 398
-        height: 131
-      alignment: 9
-      pivot: {x: 0.06199554, y: 0.6185801}
+        x: 0
+        y: 0
+        width: 1672
+        height: 941
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6e9d21f1dbcbe1050800000000000000
-      internalID: 5773259292791724518
+      spriteID: 84626740124c0f110800000000000000
+      internalID: 1292748739143149128
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 0361c844f2797a240a9a6fd871f9da0a
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      brazoi_0: 5773259292791724518
+      bg_menu_0: 1292748739143149128
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

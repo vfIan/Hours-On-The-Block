@@ -22,8 +22,6 @@ public class PlayerThrowController : MonoBehaviour
 
     [Header("Power Bar")]
     public WorldPowerBar powerBar;    // PowerBar
-    public float powerBarSideOffsetX = 1.2f;
-    public float powerBarOffsetY = 1.5f;
 
     private ThrowableObject heldObject;
     private Camera cam;
@@ -33,7 +31,6 @@ public class PlayerThrowController : MonoBehaviour
 
     private Vector3 bodyOriginalScale;
     private Vector3 armOriginalScale;
-    private Vector3 powerBarOriginalScale;
 
     void Start()
     {
@@ -48,7 +45,7 @@ public class PlayerThrowController : MonoBehaviour
             armOriginalScale = armPivot.localScale;
 
         if (powerBar != null)
-            powerBarOriginalScale = powerBar.transform.localScale;
+            powerBar.Hide();
     }
 
     void Update()
@@ -102,7 +99,7 @@ public class PlayerThrowController : MonoBehaviour
             {
                 ThrowableObject obj = closest.GetComponentInParent<ThrowableObject>();
 
-                if (obj != null)
+                if (obj != null && holdPoint != null)
                 {
                     heldObject = obj;
                     heldObject.PickUp(holdPoint);
@@ -122,7 +119,11 @@ public class PlayerThrowController : MonoBehaviour
 
         FlipBody(facingLeft);
         AimArm(mouseWorldPos);
-        UpdatePowerBarPosition(facingLeft);
+
+        if (powerBar != null)
+        {
+            powerBar.SetSide(facingLeft);
+        }
     }
 
     Vector3 GetMouseWorldPosition()
@@ -152,30 +153,11 @@ public class PlayerThrowController : MonoBehaviour
         Vector2 localDir = localMouse - armPivot.localPosition;
 
         float angle = Mathf.Atan2(localDir.y, localDir.x) * Mathf.Rad2Deg;
+
         angle = Mathf.Clamp(angle, minArmAngle, maxArmAngle);
 
         armPivot.localRotation = Quaternion.Euler(0f, 0f, angle);
         armPivot.localScale = armOriginalScale;
-    }
-
-    void UpdatePowerBarPosition(bool facingLeft)
-    {
-        if (powerBar == null) return;
-
-        float xOffset = facingLeft ? powerBarSideOffsetX : -powerBarSideOffsetX;
-
-        Vector3 worldPos = transform.position + new Vector3(xOffset, powerBarOffsetY, 0f);
-        powerBar.transform.position = worldPos;
-
-        // Como PowerBar está dentro de cuerpo_0, compensamos el flip para que no se vea espejada.
-        Vector3 scale = powerBarOriginalScale;
-
-        if (facingLeft)
-            scale.x = -Mathf.Abs(powerBarOriginalScale.x);
-        else
-            scale.x = Mathf.Abs(powerBarOriginalScale.x);
-
-        powerBar.transform.localScale = scale;
     }
 
     void HandleThrowCharge()
@@ -217,6 +199,12 @@ public class PlayerThrowController : MonoBehaviour
 
         if (isCharging && Mouse.current.leftButton.wasReleasedThisFrame)
         {
+            if (holdPoint == null)
+            {
+                CancelCharge();
+                return;
+            }
+
             Vector3 mouseWorldPos = GetMouseWorldPosition();
 
             Vector2 direction = (mouseWorldPos - holdPoint.position).normalized;

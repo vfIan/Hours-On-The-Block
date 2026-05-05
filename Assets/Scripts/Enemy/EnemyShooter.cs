@@ -9,8 +9,8 @@ public class EnemyShooter : MonoBehaviour
     public Transform player;
 
     [Header("Visual")]
-    public Transform bodyVisual;   // cuerpo_0
-    public Transform armPivot;     // brazoPivot, mueve los dos brazos
+    public Transform bodyVisual;   // cuerpo_enemigo
+    public Transform armPivot;     // brazoPivot, dentro de cuerpo_enemigo
 
     [Header("Aiming")]
     public float minArmAngle = -80f;
@@ -40,21 +40,27 @@ public class EnemyShooter : MonoBehaviour
 
     void Start()
     {
-        if (player == null)
-        {
-            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
-
-            if (playerObject != null)
-                player = playerObject.transform;
-        }
+        FindPlayerIfNeeded();
 
         if (bodyVisual == null)
-            bodyVisual = transform;
+            bodyVisual = transform.Find("cuerpo_enemigo");
 
-        bodyOriginalScale = bodyVisual.localScale;
+        if (bodyVisual == null)
+            bodyVisual = transform.Find("cuerpo_0");
+
+        if (armPivot == null && bodyVisual != null)
+            armPivot = bodyVisual.Find("brazoPivot");
+
+        if (shootPoint == null && armPivot != null)
+            shootPoint = armPivot.Find("ShootPoint");
+
+        if (bodyVisual != null)
+            bodyOriginalScale = bodyVisual.localScale;
 
         if (armPivot != null)
             armOriginalScale = armPivot.localScale;
+
+        CheckReferences();
     }
 
     void Update()
@@ -66,6 +72,8 @@ public class EnemyShooter : MonoBehaviour
             DestroyEnemy();
             return;
         }
+
+        FindPlayerIfNeeded();
 
         AimAtPlayer();
 
@@ -85,9 +93,19 @@ public class EnemyShooter : MonoBehaviour
         HandleShooting();
     }
 
+    void FindPlayerIfNeeded()
+    {
+        if (player != null) return;
+
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObject != null)
+            player = playerObject.transform;
+    }
+
     void AimAtPlayer()
     {
-        if (player == null || armPivot == null || bodyVisual == null)
+        if (player == null || bodyVisual == null || armPivot == null)
             return;
 
         bool playerIsLeft = player.position.x < transform.position.x;
@@ -97,24 +115,16 @@ public class EnemyShooter : MonoBehaviour
         bodyScale.x = playerIsLeft ? -Mathf.Abs(bodyOriginalScale.x) : Mathf.Abs(bodyOriginalScale.x);
         bodyVisual.localScale = bodyScale;
 
-        // Calcular ángulo del brazo respecto al padre del pivot
+        // Como brazoPivot está dentro del cuerpo, calculamos respecto a su padre.
         Transform armParent = armPivot.parent;
 
         if (armParent == null)
             return;
 
         Vector3 localPlayerPos = armParent.InverseTransformPoint(player.position);
-        Vector2 localDir = localPlayerPos - armPivot.localPosition;
+        Vector2 localDirection = localPlayerPos - armPivot.localPosition;
 
-        float angle = Mathf.Atan2(localDir.y, localDir.x) * Mathf.Rad2Deg;
-
-        if (playerIsLeft)
-        {
-            if (angle > 0f)
-                angle = 180f - angle;
-            else
-                angle = -180f - angle;
-        }
+        float angle = Mathf.Atan2(localDirection.y, localDirection.x) * Mathf.Rad2Deg;
 
         angle = Mathf.Clamp(angle, minArmAngle, maxArmAngle);
 
@@ -136,16 +146,17 @@ public class EnemyShooter : MonoBehaviour
             hasShot = true;
 
             if (destroyAfterOneShot)
-            {
                 DestroyEnemy();
-            }
         }
     }
 
     void Shoot()
     {
         if (projectilePrefab == null || shootPoint == null || player == null)
+        {
+            CheckReferences();
             return;
+        }
 
         GameObject projectile = Instantiate(
             projectilePrefab,
@@ -161,13 +172,33 @@ public class EnemyShooter : MonoBehaviour
         {
             rb.linearVelocity = direction * shootForce;
         }
+        else
+        {
+            Debug.LogWarning("EnemyShooter: El proyectil no tiene Rigidbody2D.", projectile);
+        }
 
         EnemyProjectile enemyProjectile = projectile.GetComponent<EnemyProjectile>();
 
         if (enemyProjectile != null)
-        {
             enemyProjectile.speed = shootForce;
-        }
+    }
+
+    void CheckReferences()
+    {
+        if (player == null)
+            Debug.LogWarning("EnemyShooter: No encuentra Player. Revisa que el jugador tenga Tag = Player.", this);
+
+        if (bodyVisual == null)
+            Debug.LogWarning("EnemyShooter: Falta Body Visual. Arrastra cuerpo_enemigo o cuerpo_0.", this);
+
+        if (armPivot == null)
+            Debug.LogWarning("EnemyShooter: Falta Arm Pivot. Arrastra brazoPivot.", this);
+
+        if (shootPoint == null)
+            Debug.LogWarning("EnemyShooter: Falta Shoot Point. Debe estar dentro de brazoPivot.", this);
+
+        if (projectilePrefab == null)
+            Debug.LogWarning("EnemyShooter: Falta Projectile Prefab.", this);
     }
 
     void DestroyEnemy()

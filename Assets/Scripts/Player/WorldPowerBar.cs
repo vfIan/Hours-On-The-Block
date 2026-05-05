@@ -4,7 +4,7 @@ public class WorldPowerBar : MonoBehaviour
 {
     [Header("Animator")]
     public Animator animator;
-    public string animationStateName = "PowerBarCharge";
+    public string animationStateName = "PowerBarAnim";
 
     [Header("Posición respecto al jugador")]
     public float sideOffsetX = 1.2f;
@@ -52,7 +52,9 @@ public class WorldPowerBar : MonoBehaviour
         // Si apunta a la derecha, la barra sale a la izquierda.
         pos.x = facingLeft ? sideOffsetX : -sideOffsetX;
         pos.y = offsetY;
+        pos.z = 0f;
 
         transform.localPosition = pos;
+        transform.localRotation = Quaternion.identity;
     }
 }
