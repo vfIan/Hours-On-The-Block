@@ -3,12 +3,9 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
-    [Header("Scene")]
+    [Header("Scenes")]
     public string gameSceneName = "GameScene";
-
-    [Header("Panels")]
-    public GameObject mainPanel;
-    public GameObject controlsPanel;
+    public string controlsSceneName = "SceneControls";
 
     public void PlayGame()
     {
@@ -17,25 +14,12 @@ public class MainMenuController : MonoBehaviour
 
     public void OpenControls()
     {
-        if (mainPanel != null)
-            mainPanel.SetActive(false);
-
-        if (controlsPanel != null)
-            controlsPanel.SetActive(true);
-    }
-
-    public void BackToMain()
-    {
-        if (mainPanel != null)
-            mainPanel.SetActive(true);
-
-        if (controlsPanel != null)
-            controlsPanel.SetActive(false);
+        SceneManager.LoadScene(controlsSceneName);
     }
 
     public void QuitGame()
     {
-        Debug.Log("Quit game");
+        Debug.Log("Saliendo del juego...");
         Application.Quit();
     }
 }
