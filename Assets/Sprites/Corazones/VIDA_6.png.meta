@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: f62ccdb036f75294980b96804c9ff31a
+guid: 041770754f8c85d4db6db139bf39217d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5908686703063121359
-    second: Heart_container_0
+      213: 4474212865439041141
+    second: VIDA_6_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Heart_container_0
+      name: VIDA_6_0
       rect:
         serializedVersion: 2
-        x: 5
-        y: 28
-        width: 390
-        height: 343
+        x: 0
+        y: 0
+        width: 378
+        height: 38
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 13249d6cfb0200ea0800000000000000
-      internalID: -5908686703063121359
+      spriteID: 5760afd45e8971e30800000000000000
+      internalID: 4474212865439041141
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Heart_container_0: -5908686703063121359
+      VIDA_6_0: 4474212865439041141
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

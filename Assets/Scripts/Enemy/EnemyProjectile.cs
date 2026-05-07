@@ -33,9 +33,16 @@ public class EnemyProjectile : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        PlayerHealth playerHealth = collision.gameObject.GetComponentInParent<PlayerHealth>();
+
+        if (playerHealth != null)
         {
             Debug.Log("Jugador golpeado por proyectil enemigo");
+
+            Vector2 hitDirection = collision.transform.position - transform.position;
+
+            playerHealth.TakeDamage(damage, hitDirection);
+
             Destroy(gameObject);
         }
     }

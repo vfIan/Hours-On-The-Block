@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 87825922c8c6bcc4c9afcdc0e95560a4
+guid: 03d2bf8a1fcfb1f4298410a888cdc946
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5372428972474363992
-    second: slow9_0
+      213: 3657033679026883328
+    second: game over 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: slow9_0
+      name: game over 1_0
       rect:
         serializedVersion: 2
-        x: 5
-        y: 28
-        width: 390
-        height: 343
+        x: 57
+        y: 142
+        width: 670
+        height: 490
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 850f955afa3be8a40800000000000000
-      internalID: 5372428972474363992
+      spriteID: 00b890a51c460c230800000000000000
+      internalID: 3657033679026883328
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      slow9_0: 5372428972474363992
+      game over 1_0: 3657033679026883328
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
