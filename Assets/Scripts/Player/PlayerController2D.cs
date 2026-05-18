@@ -18,7 +18,7 @@ public class PlayerController2D : MonoBehaviour
 
     private Rigidbody2D rb;
     private bool isGrounded;
-    private float moveInput = 0f;
+    private Vector2 moveInput;
     private Vector3 bodyOriginalScale;
 
     void Start()
@@ -31,9 +31,7 @@ public class PlayerController2D : MonoBehaviour
 
     void Update()
     {
-        ReadInput();
         CheckGround();
-        Jump();
         FlipCharacter();
         UpdateAnimation();
     }
@@ -43,21 +41,26 @@ public class PlayerController2D : MonoBehaviour
         Move();
     }
 
-    void ReadInput()
+    public void OnMove(InputValue value)
     {
-        moveInput = 0f;
+        moveInput = value.Get<Vector2>();
+    }
 
-        if (Keyboard.current == null) return;
+    public void OnJump(InputValue value)
+    {
+        if (!value.isPressed) return;
 
-        if (Keyboard.current.aKey.isPressed)
-            moveInput = -1f;
-        else if (Keyboard.current.dKey.isPressed)
-            moveInput = 1f;
+        if (isGrounded && rb != null)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        }
     }
 
     void Move()
     {
-        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        if (rb == null) return;
+
+        rb.linearVelocity = new Vector2(moveInput.x * moveSpeed, rb.linearVelocity.y);
     }
 
     void CheckGround()
@@ -75,27 +78,17 @@ public class PlayerController2D : MonoBehaviour
         );
     }
 
-    void Jump()
-    {
-        if (Keyboard.current == null) return;
-
-        if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-        }
-    }
-
     void FlipCharacter()
     {
         if (bodyVisual == null) return;
 
-        if (moveInput > 0)
+        if (moveInput.x > 0.01f)
         {
             Vector3 scale = bodyOriginalScale;
             scale.x = Mathf.Abs(bodyOriginalScale.x);
             bodyVisual.localScale = scale;
         }
-        else if (moveInput < 0)
+        else if (moveInput.x < -0.01f)
         {
             Vector3 scale = bodyOriginalScale;
             scale.x = -Mathf.Abs(bodyOriginalScale.x);
@@ -105,9 +98,9 @@ public class PlayerController2D : MonoBehaviour
 
     void UpdateAnimation()
     {
-        if (animator == null) return;
+        if (animator == null || rb == null) return;
 
-        bool isRunning = moveInput != 0f && isGrounded;
+        bool isRunning = Mathf.Abs(moveInput.x) > 0.01f && isGrounded;
 
         animator.SetBool("isRunning", isRunning);
         animator.SetBool("isGrounded", isGrounded);
